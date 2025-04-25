@@ -43,6 +43,12 @@ public class EmpresaController {
         return ResponseEntity.created(uri).body(empresa);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<EmpresaResponseDTO> update(@PathVariable Long id, @RequestBody EmpresaCreateRequestDTO obj) {
+        EmpresaResponseDTO empresa = empresaService.update(id, obj);
+        return ResponseEntity.ok(empresa);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         empresaService.delete(id);
