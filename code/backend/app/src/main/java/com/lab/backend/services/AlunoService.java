@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import com.lab.backend.repositories.AlunoRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.List;
+
 @Service
 public class AlunoService {
 
@@ -20,6 +23,17 @@ public class AlunoService {
     public AlunoService(AlunoRepository alunoRepository, EnderecoRepository enderecoRepository) {
         this.alunoRepository = alunoRepository;
         this.enderecoRepository = enderecoRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public Aluno findById(Long id) {
+        return alunoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Aluno> findAll() {
+        return alunoRepository.findAll();
     }
 
     @Transactional
@@ -46,6 +60,4 @@ public class AlunoService {
 
         return AlunoMapper.INSTANCE.toResponseDTO(aluno);
     }
-
-
 }
