@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.lab.backend.repositories.AlunoRepository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -59,5 +58,11 @@ public class AlunoService {
         aluno.setCurso(obj.curso());
 
         return AlunoMapper.INSTANCE.toResponseDTO(aluno);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        findById(id);
+        alunoRepository.deleteById(id);
     }
 }

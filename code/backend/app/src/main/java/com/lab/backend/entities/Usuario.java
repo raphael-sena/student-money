@@ -22,7 +22,7 @@ public class Usuario {
     private String login;
     private String senha;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
