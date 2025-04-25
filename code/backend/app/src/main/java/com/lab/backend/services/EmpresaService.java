@@ -8,6 +8,8 @@ import com.lab.backend.repositories.EmpresaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class EmpresaService {
 
@@ -16,6 +18,21 @@ public class EmpresaService {
 
     public EmpresaService(EmpresaRepository empresaRepository) {
         this.empresaRepository = empresaRepository;
+    }
+
+    @Transactional(readOnly = true)
+    public EmpresaResponseDTO findById(Long id) {
+        return empresaRepository.findById(id)
+                .map(EmpresaMapper.INSTANCE::toResponseDTO)
+                .orElseThrow(() -> new RuntimeException("Empresa não encontrada"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<EmpresaResponseDTO> findAll() {
+        return empresaRepository.findAll()
+                .stream()
+                .map(EmpresaMapper.INSTANCE::toResponseDTO)
+                .toList();
     }
 
     @Transactional
@@ -35,5 +52,6 @@ public class EmpresaService {
 
         return EmpresaMapper.INSTANCE.toResponseDTO(empresa);
     }
+
 
 }

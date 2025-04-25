@@ -4,13 +4,11 @@ import com.lab.backend.entities.dtos.EmpresaCreateRequestDTO;
 import com.lab.backend.entities.dtos.EmpresaResponseDTO;
 import com.lab.backend.services.EmpresaService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/empresas")
@@ -20,6 +18,16 @@ public class EmpresaController {
 
     public EmpresaController(EmpresaService empresaService) {
         this.empresaService = empresaService;
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<EmpresaResponseDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(empresaService.findById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<EmpresaResponseDTO>> findAll() {
+        return ResponseEntity.ok(empresaService.findAll());
     }
 
     @PostMapping
