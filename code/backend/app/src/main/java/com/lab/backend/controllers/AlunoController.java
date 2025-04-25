@@ -49,6 +49,12 @@ public class AlunoController {
         return ResponseEntity.created(uri).body(aluno);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<AlunoResponseDTO> update(@PathVariable Long id, @RequestBody AlunoCreateRequestDTO obj) {
+        AlunoResponseDTO aluno = alunoService.update(id, obj);
+        return ResponseEntity.ok(aluno);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         alunoService.delete(id);
