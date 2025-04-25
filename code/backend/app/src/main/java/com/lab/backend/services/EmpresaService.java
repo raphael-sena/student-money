@@ -5,6 +5,7 @@ import com.lab.backend.entities.dtos.EmpresaCreateRequestDTO;
 import com.lab.backend.entities.dtos.EmpresaResponseDTO;
 import com.lab.backend.mappers.EmpresaMapper;
 import com.lab.backend.repositories.EmpresaRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,6 +52,12 @@ public class EmpresaService {
         empresaRepository.save(empresa);
 
         return EmpresaMapper.INSTANCE.toResponseDTO(empresa);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        findById(id);
+        empresaRepository.deleteById(id);
     }
 
 

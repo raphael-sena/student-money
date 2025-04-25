@@ -42,4 +42,10 @@ public class EmpresaController {
 
         return ResponseEntity.created(uri).body(empresa);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        empresaService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
