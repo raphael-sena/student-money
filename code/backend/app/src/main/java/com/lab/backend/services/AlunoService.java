@@ -3,6 +3,8 @@ package com.lab.backend.services;
 import com.lab.backend.entities.Aluno;
 import com.lab.backend.entities.Endereco;
 import com.lab.backend.entities.dtos.*;
+import com.lab.backend.mappers.AlunoMapper;
+import com.lab.backend.mappers.EnderecoMapper;
 import com.lab.backend.repositories.EnderecoRepository;
 import org.springframework.stereotype.Service;
 import com.lab.backend.repositories.AlunoRepository;
@@ -28,24 +30,11 @@ public class AlunoService {
                     throw new RuntimeException("Login já existe");
                 });
 
-        Aluno aluno = new Aluno();
-
-        aluno.setNome(obj.pessoa().usuario().nome());
-        aluno.setLogin(obj.pessoa().usuario().login());
-        aluno.setSenha(obj.pessoa().usuario().senha());
-
+        Aluno aluno = AlunoMapper.INSTANCE.toEntity(obj);
         alunoRepository.save(aluno);
 
-        Endereco endereco = new Endereco();
-        endereco.setRua(obj.pessoa().usuario().endereco().rua());
-        endereco.setNumero(obj.pessoa().usuario().endereco().numero());
-        endereco.setComplemento(obj.pessoa().usuario().endereco().complemento());
-        endereco.setBairro(obj.pessoa().usuario().endereco().bairro());
-        endereco.setCidade(obj.pessoa().usuario().endereco().cidade());
-        endereco.setEstado(obj.pessoa().usuario().endereco().estado());
-        endereco.setCep(obj.pessoa().usuario().endereco().cep());
+        Endereco endereco = EnderecoMapper.INSTANCE.toEntity(obj.pessoa().usuario().endereco());
         endereco.setUsuario(aluno);
-
         enderecoRepository.save(endereco);
 
         aluno.setEndereco(endereco);
@@ -55,30 +44,7 @@ public class AlunoService {
         aluno.setRg(obj.rg());
         aluno.setCurso(obj.curso());
 
-
-        return new AlunoResponseDTO(
-                new PessoaResponseDTO(
-                        new UsuarioResponseDTO(
-                                aluno.getId(),
-                                aluno.getNome(),
-                                aluno.getLogin(),
-                                aluno.getSenha(),
-                                new EnderecoResponseDTO(
-                                        aluno.getEndereco().getId(),
-                                        aluno.getEndereco().getRua(),
-                                        aluno.getEndereco().getNumero(),
-                                        aluno.getEndereco().getComplemento(),
-                                        aluno.getEndereco().getBairro(),
-                                        aluno.getEndereco().getCidade(),
-                                        aluno.getEndereco().getEstado(),
-                                        aluno.getEndereco().getCep()
-                                )
-                        ),
-                        aluno.getCpf()
-                ),
-                aluno.getRg(),
-                aluno.getCurso()
-        );
+        return AlunoMapper.INSTANCE.toResponseDTO(aluno);
     }
 
 
