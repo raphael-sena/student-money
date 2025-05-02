@@ -7,6 +7,7 @@ import com.lab.user_service.entities.dtos.users.UserCreateResponseDTO;
 import com.lab.user_service.entities.dtos.users.person.PersonCreateResponseDTO;
 import com.lab.user_service.entities.dtos.users.person.student.StudentCreateRequestDTO;
 import com.lab.user_service.entities.dtos.users.person.student.StudentCreateResponseDTO;
+import com.lab.user_service.mappers.AddressMapper;
 import com.lab.user_service.mappers.UserMapper;
 import com.lab.user_service.repositories.StudentRespository;
 import com.lab.user_service.repositories.UserRepository;
@@ -21,12 +22,14 @@ public class UserService {
     private final StudentRespository studentRepository;
     private final UserFactory userFactory;
     private final UserMapper userMapper;
+    private final AddressMapper addressMapper;
 
-    public UserService(UserRepository userRepository, StudentRespository studentRepository, UserFactory userFactory, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, StudentRespository studentRepository, UserFactory userFactory, UserMapper userMapper, AddressMapper addressMapper) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.userFactory = userFactory;
         this.userMapper = userMapper;
+        this.addressMapper = addressMapper;
     }
 
     @Transactional(readOnly = true)
@@ -37,6 +40,10 @@ public class UserService {
 
     @Transactional
     public StudentCreateResponseDTO createStudent(StudentCreateRequestDTO obj) {
+
+        if (userRepository.existsByUsernameOrEmail(obj.person().user().username(), obj.person().user().email())) {
+            throw new RuntimeException("Username or email already exists");
+        }
 
         User user = userMapper.toEntity(userFactory.create(obj.person().user()));
 
@@ -50,24 +57,7 @@ public class UserService {
 
         return new StudentCreateResponseDTO(
                 new PersonCreateResponseDTO(
-                        new UserCreateResponseDTO(
-                                user.getId(),
-                                user.getName(),
-                                user.getEmail(),
-                                user.getUsername(),
-                                user.getPassword(),
-                                new AddressCreateResponseDTO(
-                                        user.getAddress().getId(),
-                                        user.getAddress().getStreet(),
-                                        user.getAddress().getNumber(),
-                                        user.getAddress().getComplement(),
-                                        user.getAddress().getNeighbourhood(),
-                                        user.getAddress().getCity(),
-                                        user.getAddress().getState(),
-                                        user.getAddress().getCep()
-                                        ),
-                                user.getRole()
-                        ),
+                        userMapper.toDto(user),
                         obj.person().cpf()
                 ),
                 obj.rg(),
