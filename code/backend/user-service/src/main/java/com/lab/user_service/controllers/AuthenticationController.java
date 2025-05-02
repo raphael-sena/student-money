@@ -1,11 +1,14 @@
 package com.lab.user_service.controllers;
 
+import com.lab.user_service.entities.Company;
 import com.lab.user_service.entities.Student;
 import com.lab.user_service.entities.User;
 import com.lab.user_service.entities.dtos.users.AuthenticationDTO;
 import com.lab.user_service.entities.dtos.users.LoginResponseDTO;
+import com.lab.user_service.entities.dtos.users.company.CompanyCreateRequestDTO;
 import com.lab.user_service.entities.dtos.users.person.student.StudentCreateRequestDTO;
 import com.lab.user_service.infra.security.TokenService;
+import com.lab.user_service.mappers.CompanyMapper;
 import com.lab.user_service.mappers.StudentMapper;
 import com.lab.user_service.repositories.UserRepository;
 import com.lab.user_service.services.UserService;
@@ -23,20 +26,22 @@ import java.net.URI;
 @RequestMapping("/auth")
 public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final TokenService tokenService;
     private final UserService userService;
     private final StudentMapper studentMapper;
+    private final CompanyMapper companyMapper;
 
 
     public AuthenticationController(@Autowired AuthenticationManager authenticationManager,
-                                    @Autowired UserRepository repository,
-                                    @Autowired TokenService tokenService, UserService userService, StudentMapper studentMapper) {
+                                    @Autowired UserRepository userRepository,
+                                    @Autowired TokenService tokenService, UserService userService, StudentMapper studentMapper, CompanyMapper companyMapper) {
         this.authenticationManager = authenticationManager;
-        this.repository = repository;
+        this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.userService = userService;
         this.studentMapper = studentMapper;
+        this.companyMapper = companyMapper;
     }
 
     @PostMapping("/login")
@@ -56,7 +61,7 @@ public class AuthenticationController {
 
     @PostMapping("/register/student")
     public ResponseEntity<Void> registerStudent(@RequestBody @Valid StudentCreateRequestDTO data){
-        if(this.repository.findByUsername(data.person().user().email()) != null) return ResponseEntity.badRequest().build();
+        if(this.userRepository.findByUsername(data.person().user().email()) != null) return ResponseEntity.badRequest().build();
 
         Student newStudent = studentMapper.fromStudentCreatetoEntity(userService.createStudent(data));
 
@@ -64,6 +69,21 @@ public class AuthenticationController {
                 .fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(newStudent.getId())
+                .toUri();
+
+        return ResponseEntity.created(uri).build();
+    }
+
+    @PostMapping("/register/company")
+    public ResponseEntity<Void> registerCompany(@RequestBody @Valid CompanyCreateRequestDTO data){
+        if(this.userRepository.findByUsername(data.user().email()) != null) return ResponseEntity.badRequest().build();
+
+        Company newCompany = companyMapper.fromCompanyCreatetoEntity(userService.createCompany(data));
+
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newCompany.getId())
                 .toUri();
 
         return ResponseEntity.created(uri).build();

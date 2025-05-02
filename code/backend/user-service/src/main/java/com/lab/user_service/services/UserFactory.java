@@ -5,7 +5,7 @@ import com.lab.user_service.entities.User;
 import com.lab.user_service.entities.dtos.users.UserCreateRequestDTO;
 import com.lab.user_service.entities.dtos.users.UserCreateResponseDTO;
 import com.lab.user_service.entities.enums.Role;
-import com.lab.user_service.mappers.AddressMapper;
+import com.lab.user_service.mappers.UserMapper;
 import com.lab.user_service.repositories.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserFactory {
 
     private final AddressService addressService;
-    private final AddressMapper addressMapper;
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserFactory(AddressService addressService, AddressMapper addressMapper, UserRepository userRepository) {
+    public UserFactory(AddressService addressService, UserRepository userRepository, UserMapper userMapper) {
         this.addressService = addressService;
-        this.addressMapper = addressMapper;
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Transactional
@@ -65,14 +65,6 @@ public class UserFactory {
 
         userRepository.save(user);
 
-        return new UserCreateResponseDTO(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.getUsername(),
-                user.getPassword(),
-                addressMapper.toDto(user.getAddress()),
-                user.getRole()
-        );
+        return userMapper.toDto(user);
     }
 }
