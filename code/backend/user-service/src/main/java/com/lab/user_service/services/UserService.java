@@ -6,8 +6,12 @@ import com.lab.user_service.entities.User;
 import com.lab.user_service.entities.dtos.users.company.CompanyCreateRequestDTO;
 import com.lab.user_service.entities.dtos.users.company.CompanyCreateResponseDTO;
 import com.lab.user_service.entities.dtos.users.person.PersonCreateResponseDTO;
+import com.lab.user_service.entities.dtos.users.person.PersonPatchResponseDTO;
 import com.lab.user_service.entities.dtos.users.person.student.StudentCreateRequestDTO;
 import com.lab.user_service.entities.dtos.users.person.student.StudentCreateResponseDTO;
+import com.lab.user_service.entities.dtos.users.person.student.StudentPatchRequestDTO;
+import com.lab.user_service.entities.dtos.users.person.student.StudentPatchResponseDTO;
+import com.lab.user_service.mappers.AddressMapper;
 import com.lab.user_service.mappers.UserMapper;
 import com.lab.user_service.repositories.CompanyRepository;
 import com.lab.user_service.repositories.StudentRespository;
@@ -23,19 +27,27 @@ public class UserService {
     private final UserFactory userFactory;
     private final UserMapper userMapper;
     private final CompanyRepository companyRepository;
+    private final AddressMapper addressMapper;
 
-    public UserService(UserRepository userRepository, StudentRespository studentRepository, UserFactory userFactory, UserMapper userMapper, CompanyRepository companyRepository) {
+    public UserService(UserRepository userRepository, StudentRespository studentRepository, UserFactory userFactory, UserMapper userMapper, CompanyRepository companyRepository, AddressMapper addressMapper) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.userFactory = userFactory;
         this.userMapper = userMapper;
         this.companyRepository = companyRepository;
+        this.addressMapper = addressMapper;
     }
 
     @Transactional(readOnly = true)
     public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Transactional(readOnly = true)
+    public Student findStudentById(Long studentId) {
+        return studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
     @Transactional
@@ -62,6 +74,37 @@ public class UserService {
                 ),
                 obj.rg(),
                 obj.course()
+        );
+    }
+
+    @Transactional
+    public StudentPatchResponseDTO updateStudent(Long id, StudentPatchRequestDTO obj) {
+        Student student = findStudentById(id);
+
+        if(obj.person() != null) {
+            if (obj.person().name() != null) {
+                student.getUser().setName(obj.person().name());
+            }
+
+            if (obj.person().address() != null) {
+                student.getUser().setAddress(
+                        addressMapper.fromPatchtoEntity(obj.person().address())
+                );
+            }
+        }
+
+        if (obj.course() != null) {
+            student.setCurso(obj.course());
+        }
+
+        studentRepository.save(student);
+
+        return new StudentPatchResponseDTO(
+                new PersonPatchResponseDTO(
+                        student.getUser().getName(),
+                        addressMapper.toPatchResponseDTO(student.getUser().getAddress())
+                ),
+                student.getCurso()
         );
     }
 

@@ -1,15 +1,11 @@
 package com.lab.user_service.controllers;
 
-import com.lab.user_service.entities.dtos.users.person.student.StudentCreateRequestDTO;
-import com.lab.user_service.entities.dtos.users.person.student.StudentCreateResponseDTO;
+import com.lab.user_service.entities.dtos.users.person.student.StudentPatchRequestDTO;
+import com.lab.user_service.entities.dtos.users.person.student.StudentPatchResponseDTO;
 import com.lab.user_service.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -21,16 +17,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/students")
-    public ResponseEntity<StudentCreateResponseDTO> createStudent(StudentCreateRequestDTO obj) {
-        StudentCreateResponseDTO student = userService.createStudent(obj);
-
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(student.person().user().id())
-                .toUri();
-
-        return ResponseEntity.created(uri).body(student);
+    @PatchMapping("/students/{id}")
+    public ResponseEntity<StudentPatchResponseDTO> createStudent(@PathVariable Long id, @RequestBody @Valid StudentPatchRequestDTO obj) {
+        StudentPatchResponseDTO student = userService.updateStudent(id, obj);
+        return ResponseEntity.ok().body(student);
     }
 }
