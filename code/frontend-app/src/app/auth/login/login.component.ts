@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {AuthService} from '../../services/auth.service';
-import {RouterModule} from '@angular/router';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AuthService } from '../../services/auth.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [
-    ReactiveFormsModule, RouterModule
-  ],
+  imports: [ReactiveFormsModule, RouterModule],
   providers: [AuthService],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -15,9 +13,12 @@ import {RouterModule} from '@angular/router';
 export class LoginComponent {
   loginForm: FormGroup;
   userTypes = ['student', 'company'];
-  private router: any;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -37,13 +38,11 @@ export class LoginComponent {
           } else if (role === 'ADMIN') {
             this.router.navigate(['/home/admin']);
           } else {
-            this.router.navigate(['/login']); // fallback
+            this.router.navigate(['/login']);
           }
         },
         error: (err) => console.error('Erro no login', err)
       });
-
     }
   }
-
 }
