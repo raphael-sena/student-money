@@ -22,4 +22,10 @@ public class UserController {
         StudentPatchResponseDTO student = userService.updateStudent(id, obj);
         return ResponseEntity.ok().body(student);
     }
+
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> userExists(@RequestParam String email) {
+        boolean exists = userService.userExists(email);
+        return ResponseEntity.ok(exists);
+    }
 }

@@ -53,6 +53,8 @@ public class UserService {
     @Transactional
     public StudentCreateResponseDTO createStudent(StudentCreateRequestDTO obj) {
 
+        System.err.println("entrou no createStudent");
+
         if (userRepository.existsByUsernameOrEmail(obj.person().user().username(), obj.person().user().email())) {
             throw new RuntimeException("Username or email already exists");
         }
@@ -128,5 +130,9 @@ public class UserService {
                 obj.cnpj()
         );
 
+    }
+
+    public boolean userExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

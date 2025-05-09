@@ -6,6 +6,9 @@
       <list>
         <option value="$PROJECT_DIR$/app/pom.xml" />
         <option value="$PROJECT_DIR$/user-service/pom.xml" />
+        <option value="$PROJECT_DIR$/notification-service/pom.xml" />
+        <option value="$PROJECT_DIR$/studentmoney-gateway/studentmoney-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/studentmoney-gateway/pom.xml" />
       </list>
     </option>
   </component>

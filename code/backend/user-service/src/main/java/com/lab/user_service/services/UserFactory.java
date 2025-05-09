@@ -17,11 +17,13 @@ public class UserFactory {
     private final AddressService addressService;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final TwoFactorAuthService twoFactorAuthService;
 
-    public UserFactory(AddressService addressService, UserRepository userRepository, UserMapper userMapper) {
+    public UserFactory(AddressService addressService, UserRepository userRepository, UserMapper userMapper, TwoFactorAuthService twoFactorAuthService) {
         this.addressService = addressService;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.twoFactorAuthService = twoFactorAuthService;
     }
 
     @Transactional
@@ -64,6 +66,13 @@ public class UserFactory {
         user.setAddress(address);
 
         userRepository.save(user);
+
+        twoFactorAuthService.send2FACode(
+                String.valueOf(user.getId()),
+                user.getEmail(),
+                "email",
+                "signup"
+        );
 
         return userMapper.toDto(user);
     }
