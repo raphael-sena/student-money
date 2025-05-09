@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Observable, tap} from 'rxjs';
 import { environment } from '../../environments/environment';
 
 /** Typing for authentication request */
@@ -51,32 +51,73 @@ export interface CompanyCreateRequestDTO {
   cnpj: string;
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private baseUrl = environment.apiBaseUrl + '/auth';
+  private tokenKey = 'access_token';
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Autentica usuário (estudante ou empresa)
-   */
-  login(data: AuthenticationRequest): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/login`, data);
+  /** Autentica usuário e salva o token no localStorage */
+  login(data: AuthenticationRequest): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.baseUrl}/login`, data).pipe(
+      tap(response => {
+        localStorage.setItem(this.tokenKey, response.token);
+      })
+    );
   }
 
-  /**
-   * Cadastra um estudante
-   */
+
+  /** Cadastra um estudante */
   registerStudent(data: StudentCreateRequestDTO): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/register/student`, data);
   }
 
-  /**
-   * Cadastra uma empresa
-   */
+  /** Cadastra uma empresa */
   registerCompany(data: CompanyCreateRequestDTO): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/register/company`, data);
   }
+
+  /** Retorna o token atual salvo */
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  /** Verifica se o token existe e está válido */
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const [, payloadBase64] = token.split('.');
+      const payload = JSON.parse(atob(payloadBase64));
+      const now = Math.floor(Date.now() / 1000);
+      return payload.exp && payload.exp > now;
+    } catch {
+      return false;
+    }
+  }
+
+  getUserRole(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const [, payloadBase64] = token.split('.');
+      const payload = JSON.parse(atob(payloadBase64));
+      return payload.role || null;
+    } catch {
+      return null;
+    }
+  }
+
+
+  /** Remove o token e efetua logout */
+  logout(): void {
+    localStorage.removeItem(this.tokenKey);
+  }
 }
+

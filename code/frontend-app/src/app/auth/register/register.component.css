@@ -2,7 +2,7 @@
 
 /* gradient background with vertical padding */
 :host .register-container {
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+  background: #5DD6BD;
   padding-top: 2rem;
   padding-bottom: 2rem;
   display: flex;

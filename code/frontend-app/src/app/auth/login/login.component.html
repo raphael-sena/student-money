@@ -21,7 +21,7 @@
 
       <div class="form-floating mb-3">
         <input type="password"
-               formControlName="senha"
+               formControlName="password"
                class="form-control"
                id="loginPassword"
                placeholder="Senha" required>
@@ -30,14 +30,6 @@
         </label>
       </div>
 
-      <div class="mb-3">
-        <select formControlName="tipoUsuario"
-                class="form-select form-select-lg">
-          @for (tipo of userTypes; track tipo) {
-            <option [value]="tipo">{{ tipo }}</option>
-          }
-        </select>
-      </div>
 
       <button type="submit"
               class="btn btn-primary btn-lg btn-rounded w-100 mb-2">

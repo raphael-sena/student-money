@@ -1,0 +1,25 @@
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Vantagens da Empresa</h2>
+    <button class="btn btn-primary" (click)="openAdvantageModal()">Nova Vantagem</button>
+  </div>
+
+  <div class="row">
+    @for (advantage of advantages; track advantage.id) {
+      <div class="col-md-4 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ advantage.title }}</h5>
+            <p class="card-text">{{ advantage.description }}</p>
+            <p class="card-text"><strong>Desconto:</strong> {{ advantage.discount }}%</p>
+            <p class="card-text"><strong>Validade:</strong> {{ advantage.expirationDate }}</p>
+          </div>
+          <div class="card-footer d-flex justify-content-between">
+            <button class="btn btn-sm btn-warning" (click)="openAdvantageModal(advantage)">Editar</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteAdvantage(advantage.id)">Excluir</button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>
