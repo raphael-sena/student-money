@@ -3,7 +3,7 @@
 /* full-height gradient background */
 :host .login-container {
   height: 100vh;
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+  background: #5DD6BD;
   display: flex;
   align-items: center;
   justify-content: center;
