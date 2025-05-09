@@ -70,7 +70,7 @@ export class AuthService {
    * Cadastra um estudante
    */
   registerStudent(data: StudentCreateRequestDTO): Observable<any> {
-    return this.http.post<any>(`${this.baseUrl}/register/students`, data);
+    return this.http.post<any>(`${this.baseUrl}/register/student`, data);
   }
 
   /**

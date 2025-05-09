@@ -18,11 +18,13 @@ public class UserClient {
     }
 
     public boolean userExists(String email) {
-        Boolean exists = restTemplate.getForObject(userServiceUrl + "/api/v1/users/exists?email=" + email, Boolean.class);
+        Boolean exists = restTemplate.getForObject(userServiceUrl + "/exists?email=" + email, Boolean.class);
         return exists != null && exists;
     }
 
     public UserDTO validateCredentials(AuthenticationDTO dto) {
-        return restTemplate.postForObject("http://user-service/auth/validate", dto, UserDTO.class);
+        UserDTO user = restTemplate.postForObject(userServiceUrl + "/auth/validate", dto, UserDTO.class);
+        System.out.println("User retornado: " + user);
+        return user;
     }
 }

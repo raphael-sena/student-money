@@ -3,6 +3,8 @@ package com.lab.user_service.services;
 import com.lab.user_service.entities.Company;
 import com.lab.user_service.entities.Student;
 import com.lab.user_service.entities.User;
+import com.lab.user_service.entities.dtos.users.AuthenticationDTO;
+import com.lab.user_service.entities.dtos.users.UserDTO;
 import com.lab.user_service.entities.dtos.users.company.CompanyCreateRequestDTO;
 import com.lab.user_service.entities.dtos.users.company.CompanyCreateResponseDTO;
 import com.lab.user_service.entities.dtos.users.person.PersonCreateResponseDTO;
@@ -16,6 +18,7 @@ import com.lab.user_service.mappers.UserMapper;
 import com.lab.user_service.repositories.CompanyRepository;
 import com.lab.user_service.repositories.StudentRespository;
 import com.lab.user_service.repositories.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,9 +55,6 @@ public class UserService {
 
     @Transactional
     public StudentCreateResponseDTO createStudent(StudentCreateRequestDTO obj) {
-
-        System.err.println("entrou no createStudent");
-
         if (userRepository.existsByUsernameOrEmail(obj.person().user().username(), obj.person().user().email())) {
             throw new RuntimeException("Username or email already exists");
         }
@@ -134,5 +134,18 @@ public class UserService {
 
     public boolean userExists(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    public UserDTO validateCredentials(AuthenticationDTO data) {
+        User user = userRepository.findByEmail(data.email())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean match = new BCryptPasswordEncoder().matches(data.password(), user.getPassword());
+
+        if (!match) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        return userMapper.toUserDTO(user);
     }
 }
