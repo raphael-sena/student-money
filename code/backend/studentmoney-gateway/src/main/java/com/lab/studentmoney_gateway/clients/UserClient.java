@@ -23,8 +23,6 @@ public class UserClient {
     }
 
     public UserDTO validateCredentials(AuthenticationDTO dto) {
-        UserDTO user = restTemplate.postForObject(userServiceUrl + "/auth/validate", dto, UserDTO.class);
-        System.out.println("User retornado: " + user);
-        return user;
+        return restTemplate.postForObject(userServiceUrl + "/auth/validate", dto, UserDTO.class);
     }
 }

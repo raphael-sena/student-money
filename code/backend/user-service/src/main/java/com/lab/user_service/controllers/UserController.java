@@ -1,7 +1,6 @@
 package com.lab.user_service.controllers;
 
 import com.lab.user_service.entities.dtos.users.AuthenticationDTO;
-import com.lab.user_service.entities.dtos.users.LoginResponseDTO;
 import com.lab.user_service.entities.dtos.users.UserDTO;
 import com.lab.user_service.entities.dtos.users.person.student.StudentPatchRequestDTO;
 import com.lab.user_service.entities.dtos.users.person.student.StudentPatchResponseDTO;
@@ -33,12 +32,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/validate")
-    public ResponseEntity<UserDTO> validateCredentials(@RequestBody @Valid AuthenticationDTO data) {
-        System.err.println("Entrou no validateCredentials");
-        UserDTO user = userService.validateCredentials(data);
-        System.err.println("UserDTO: " + user.email() + " " + user.id() + " " + user.role());
-        return ResponseEntity.ok(user);
+    public UserDTO validateCredentials(@RequestBody @Valid AuthenticationDTO data) {
+        return userService.validateCredentials(data);
     }
-
-
 }
