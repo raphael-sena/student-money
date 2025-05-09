@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/auth")
@@ -30,35 +31,42 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO data){
-        UserDTO user = userClient.validateCredentials(data);
-        String token = tokenService.generateToken(user);
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+    public Mono<ResponseEntity<LoginResponseDTO>> login(@RequestBody @Valid AuthenticationDTO data){
+        return Mono.fromCallable(() -> {
+            UserDTO user = userClient.validateCredentials(data);
+            String token = tokenService.generateToken(user);
+            return ResponseEntity.ok(new LoginResponseDTO(token));
+        });
     }
 
     @PostMapping("/register/student")
-    public ResponseEntity<Void> registerStudent(@RequestBody @Valid StudentCreateRequestDTO data){
-        try {
-            if(userClient.userExists(data.person().user().email())) return ResponseEntity.badRequest().build();
+    public Mono<ResponseEntity<String>> registerStudent(@RequestBody @Valid StudentCreateRequestDTO data) {
+        return Mono.fromCallable(() -> {
+            if (userClient.userExists(data.person().user().email())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email já cadastrado");
+            }
 
             userProducer.sendStudentCreation(data);
-            return ResponseEntity.accepted().build();
-        } catch (Exception e) {
-            e.printStackTrace(); // ou log
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+            return ResponseEntity.accepted().body("Registro de estudante aceito.");
+        }).onErrorResume(e -> {
+            e.printStackTrace(); // log opcional
+            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar registro de estudante."));
+        });
     }
 
+
     @PostMapping("/register/company")
-    public ResponseEntity<Void> registerCompany(@RequestBody @Valid CompanyCreateRequestDTO data){
-        try {
-            if(userClient.userExists(data.user().email())) return ResponseEntity.badRequest().build();
+    public Mono<ResponseEntity<String>> registerCompany(@RequestBody @Valid CompanyCreateRequestDTO data) {
+        return Mono.fromCallable(() -> {
+            if (userClient.userExists(data.user().email())) {
+                return ResponseEntity.badRequest().body("E-mail já cadastrado.");
+            }
 
             userProducer.sendCompanyCreation(data);
-            return ResponseEntity.accepted().build();
-        } catch (Exception e) {
-            e.printStackTrace(); // ou log
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+            return ResponseEntity.accepted().body("Registro de empresa aceito.");
+        }).onErrorResume(e -> {
+            e.printStackTrace(); // log opcional
+            return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar registro de empresa."));
+        });
     }
 }
