@@ -1,0 +1,41 @@
+/* register.component.css */
+
+/* gradient background with vertical padding */
+:host .register-container {
+  background: #5DD6BD;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* card styling */
+:host .register-card {
+  max-width: 540px;
+  width: 100%;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, .2);
+  background: #ffffff;
+}
+
+/* floating form fields */
+:host .form-floating .form-control {
+  border-radius: .75rem;
+  padding: 1.25rem .75rem .25rem;
+}
+:host .form-floating .form-control:focus {
+  border-color: #4e54c8;
+  box-shadow: 0 0 0 .2rem rgba(78, 84, 200, .25);
+}
+
+/* rounded buttons with hover lift */
+:host .btn-rounded {
+  border-radius: 50px;
+  transition: transform .3s;
+}
+:host .btn-rounded:hover {
+  transform: translateY(-2px);
+}

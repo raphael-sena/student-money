@@ -1,0 +1,31 @@
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend-network
+
+  rabbitmq:
+    image: rabbitmq:3.7.8-management
+    ports:
+      - "15672:15672"  # Acesso à interface de gerenciamento do RabbitMQ
+      - "5672:5672"    # Porta para conexões AMQP (clientes)
+    environment:
+      - RABBITMQ_DEFAULT_USER=rabbitmq
+      - RABBITMQ_DEFAULT_PASS=rabbitmq
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - backend-network  # Certifique-se de que o usuário do serviço tenha acesso à mesma rede
+
+volumes:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  backend-network:
+    driver: bridge

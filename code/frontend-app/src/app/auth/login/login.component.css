@@ -1,0 +1,44 @@
+/* login.component.css */
+
+/* full-height gradient background */
+:host .login-container {
+  height: 100vh;
+  background: #5DD6BD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* card styling */
+:host .login-card {
+  max-width: 420px;
+  width: 100%;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, .2);
+  background: #ffffff;
+}
+
+/* logo size */
+:host .auth-logo {
+  width: 80px;
+}
+
+/* rounded buttons with hover lift */
+:host .btn-rounded {
+  border-radius: 50px;
+  transition: transform .3s;
+}
+:host .btn-rounded:hover {
+  transform: translateY(-2px);
+}
+
+/* floating form fields */
+:host .form-floating .form-control {
+  border-radius: .75rem;
+  padding: 1.25rem .75rem .25rem;
+}
+:host .form-floating .form-control:focus {
+  border-color: #4e54c8;
+  box-shadow: 0 0 0 .2rem rgba(78, 84, 200, .25);
+}

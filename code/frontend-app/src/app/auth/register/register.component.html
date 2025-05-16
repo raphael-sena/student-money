@@ -1,0 +1,131 @@
+<div class="register-container d-flex align-items-center justify-content-center py-5">
+  <div class="card register-card p-4">
+    <h4 class="text-center fw-bold mb-4">Crie sua conta</h4>
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Seleção de tipo -->
+      <div class="mb-3">
+        <select formControlName="tipoUsuario" class="form-select form-select-lg">
+          @for (tipo of userTypes; track tipo) {
+            <option [value]="tipo">{{ tipo }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Nome -->
+      <div class="form-floating mb-3">
+        <input type="text" formControlName="name" class="form-control" id="regName" placeholder="Nome completo" required>
+        <label for="regName">Nome completo</label>
+      </div>
+
+      <!-- Email / Usuário -->
+      <div class="row g-3 mb-3">
+        <div class="col-6">
+          <div class="form-floating">
+            <input type="email" formControlName="email" class="form-control" id="regEmail" placeholder="Email" required>
+            <label for="regEmail">Email</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-floating">
+            <input type="text" formControlName="username" class="form-control" id="regUser" placeholder="Usuário" required>
+            <label for="regUser">Usuário</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Senha / Telefone -->
+      <div class="row g-3 mb-3">
+        <div class="col-6">
+          <div class="form-floating">
+            <input type="password" formControlName="password" class="form-control" id="regPass" placeholder="Senha" required>
+            <label for="regPass">Senha</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-floating">
+            <input type="text" formControlName="telefone" class="form-control" id="regPhone" placeholder="Telefone" required>
+            <label for="regPhone">Telefone</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Endereço completo -->
+      <div formGroupName="address" class="row g-3 mb-4">
+        <div class="col-8">
+          <div class="form-floating">
+            <input formControlName="street" class="form-control" id="regStreet" placeholder="Rua" required>
+            <label for="regStreet">Rua</label>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-floating">
+            <input formControlName="number" class="form-control" id="regNumber" placeholder="Nº" required>
+            <label for="regNumber">Nº</label>
+          </div>
+        </div>
+        <div class="col-8">
+          <div class="form-floating">
+            <input formControlName="complement" class="form-control" id="regComplement" placeholder="Complemento">
+            <label for="regComplement">Complemento</label>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="form-floating">
+            <input formControlName="neighborhood" class="form-control" id="regNeighborhood" placeholder="Bairro" required>
+            <label for="regNeighborhood">Bairro</label>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-floating">
+            <input formControlName="city" class="form-control" id="regCity" placeholder="Cidade" required>
+            <label for="regCity">Cidade</label>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-floating">
+            <input formControlName="state" class="form-control" id="regState" placeholder="Estado" required>
+            <label for="regState">Estado</label>
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-floating">
+            <input formControlName="cep" class="form-control" id="regCep" placeholder="CEP" required>
+            <label for="regCep">CEP</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Campos específicos -->
+      @if (registerForm.get('tipoUsuario')?.value === 'estudante') {
+        <div class="form-floating mb-3">
+          <input formControlName="cpf" class="form-control" id="regCPF" placeholder="CPF" required>
+          <label for="regCPF">CPF</label>
+        </div>
+        <div class="row g-3 mb-3">
+          <div class="col-6">
+            <div class="form-floating">
+              <input formControlName="rg" class="form-control" id="regRG" placeholder="RG" required>
+              <label for="regRG">RG</label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-floating">
+              <input formControlName="course" class="form-control" id="regCourse" placeholder="Curso" required>
+              <label for="regCourse">Curso</label>
+            </div>
+          </div>
+        </div>
+      }
+      @if (registerForm.get('tipoUsuario')?.value === 'empresa') {
+        <div class="form-floating mb-3">
+          <input formControlName="cnpj" class="form-control" id="regCNPJ" placeholder="CNPJ" required>
+          <label for="regCNPJ">CNPJ</label>
+        </div>
+      }
+
+      <button type="submit" class="btn btn-success btn-lg btn-rounded w-100">
+        Cadastrar
+      </button>
+    </form>
+  </div>
+</div>
