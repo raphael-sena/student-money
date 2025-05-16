@@ -37,7 +37,7 @@ public class WebFluxSecurityConfig {
                         .pathMatchers(HttpMethod.OPTIONS).permitAll()
                         .pathMatchers("/auth/**").permitAll()
                         .pathMatchers("/api/v1/users/**").permitAll()
-                        .anyExchange().authenticated()
+                        .anyExchange().permitAll()
                 )
                 .build();
     }
