@@ -47,7 +47,7 @@ public class AuthenticationController {
             }
 
             userProducer.sendStudentCreation(data);
-            return ResponseEntity.accepted().body("Registro de estudante aceito.");
+            return ResponseEntity.ok().body("Registro de estudante aceito.");
         }).onErrorResume(e -> {
             e.printStackTrace(); // log opcional
             return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar registro de estudante."));
@@ -63,7 +63,7 @@ public class AuthenticationController {
             }
 
             userProducer.sendCompanyCreation(data);
-            return ResponseEntity.accepted().body("Registro de empresa aceito.");
+            return ResponseEntity.ok().body("Registro de empresa aceito.");
         }).onErrorResume(e -> {
             e.printStackTrace(); // log opcional
             return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar registro de empresa."));
