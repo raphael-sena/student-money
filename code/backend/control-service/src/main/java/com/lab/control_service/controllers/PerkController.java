@@ -3,6 +3,7 @@ package com.lab.control_service.controllers;
 import com.lab.control_service.entities.Perk;
 import com.lab.control_service.entities.dtos.perk.PerkCreateRequestDTO;
 import com.lab.control_service.entities.dtos.perk.PerkDTO;
+import com.lab.control_service.entities.dtos.perk.PerkPatchRequestDTO;
 import com.lab.control_service.services.PerkService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -61,6 +62,12 @@ public class PerkController {
                 .toUri();
 
         return ResponseEntity.created(uri).body(perk);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<PerkDTO> updatePerk(@PathVariable Long id, @RequestBody PerkPatchRequestDTO obj) {
+        PerkDTO updatedPerk = perkService.updatePerk(obj, id);
+        return ResponseEntity.ok(updatedPerk);
     }
 
     @DeleteMapping("/{id}")

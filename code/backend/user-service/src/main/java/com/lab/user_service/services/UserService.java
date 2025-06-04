@@ -7,6 +7,7 @@ import com.lab.user_service.entities.dtos.users.AuthenticationDTO;
 import com.lab.user_service.entities.dtos.users.UserDTO;
 import com.lab.user_service.entities.dtos.users.company.CompanyCreateRequestDTO;
 import com.lab.user_service.entities.dtos.users.company.CompanyCreateResponseDTO;
+import com.lab.user_service.entities.dtos.users.company.CompanyDTO;
 import com.lab.user_service.entities.dtos.users.person.PersonCreateResponseDTO;
 import com.lab.user_service.entities.dtos.users.person.PersonPatchResponseDTO;
 import com.lab.user_service.entities.dtos.users.person.student.StudentCreateRequestDTO;
@@ -14,6 +15,7 @@ import com.lab.user_service.entities.dtos.users.person.student.StudentCreateResp
 import com.lab.user_service.entities.dtos.users.person.student.StudentPatchRequestDTO;
 import com.lab.user_service.entities.dtos.users.person.student.StudentPatchResponseDTO;
 import com.lab.user_service.mappers.AddressMapper;
+import com.lab.user_service.mappers.CompanyMapper;
 import com.lab.user_service.mappers.UserMapper;
 import com.lab.user_service.repositories.CompanyRepository;
 import com.lab.user_service.repositories.StudentRespository;
@@ -21,6 +23,8 @@ import com.lab.user_service.repositories.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class UserService {
@@ -31,14 +35,16 @@ public class UserService {
     private final UserMapper userMapper;
     private final CompanyRepository companyRepository;
     private final AddressMapper addressMapper;
+    private final CompanyMapper companyMapper;
 
-    public UserService(UserRepository userRepository, StudentRespository studentRepository, UserFactory userFactory, UserMapper userMapper, CompanyRepository companyRepository, AddressMapper addressMapper) {
+    public UserService(UserRepository userRepository, StudentRespository studentRepository, UserFactory userFactory, UserMapper userMapper, CompanyRepository companyRepository, AddressMapper addressMapper, CompanyMapper companyMapper) {
         this.userRepository = userRepository;
         this.studentRepository = studentRepository;
         this.userFactory = userFactory;
         this.userMapper = userMapper;
         this.companyRepository = companyRepository;
         this.addressMapper = addressMapper;
+        this.companyMapper = companyMapper;
     }
 
     @Transactional(readOnly = true)
@@ -147,5 +153,20 @@ public class UserService {
         }
 
         return userMapper.toUserDTO(user);
+    }
+
+    @Transactional(readOnly = true)
+    public CompanyDTO findCompanyById(Long id) {
+        Company company = companyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+
+        return companyMapper.toDTO(company);
+    }
+
+    @Transactional(readOnly = true)
+    public List<CompanyDTO> findAllCompanies() {
+        return companyRepository.findAll().stream()
+                .map(companyMapper::toDTO)
+                .toList();
     }
 }
