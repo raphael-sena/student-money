@@ -1,0 +1,28 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: servico-transacao
+  datasource:
+    url: jdbc:postgresql://localhost:5432/moeda_estudantil
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+rabbitmq:
+  exchange:
+    transacao: exchange-transacao
+  routingkey:
+    notificacao-transacao: notificacao.transacao 
