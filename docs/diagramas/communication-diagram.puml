@@ -1,0 +1,35 @@
+@startuml Diagrama de Comunicação - Sistema de Cupons por Email
+
+skinparam componentStyle uml2
+skinparam backgroundColor white
+skinparam handwritten false
+
+actor "Administrador" as admin
+participant "Serviço de Controle" as control
+participant "Serviço de Usuário" as user
+participant "Serviço de Notificação" as notification
+database "Banco de Dados" as db
+
+== Processo de Envio de Cupons por Email ==
+
+admin -> control: Solicita envio de cupons
+activate control
+
+control -> user: Obtém destinatários (professores/alunos)
+activate user
+user -> db: Consulta dados dos usuários
+db --> user: Retorna dados dos usuários
+user --> control: Retorna lista de destinatários
+deactivate user
+
+control -> notification: Solicita envio de email
+activate notification
+notification -> notification: Gera conteúdo do email
+notification -> notification: Envia email
+notification --> control: Confirmação de envio
+deactivate notification
+
+control --> admin: Envio de cupons concluído
+deactivate control
+
+@enduml 

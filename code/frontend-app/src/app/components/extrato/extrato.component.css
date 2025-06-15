@@ -1,0 +1,126 @@
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.card-header {
+  background: #1976d2;
+  color: white;
+  padding: 1.5rem;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.saldo-container {
+  background: #f5f5f5;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.saldo-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.saldo-label {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+}
+
+.saldo-valor {
+  font-size: 2rem;
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.transacoes-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-header-cell {
+  background-color: #f5f5f5;
+  color: #333;
+  font-weight: 500;
+}
+
+.mat-cell {
+  padding: 1rem;
+}
+
+.tipo-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.professor_para_aluno {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.aluno_para_parceiro {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+.valor-positivo {
+  color: #2e7d32;
+}
+
+.valor-negativo {
+  color: #c62828;
+}
+
+.sem-transacoes {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+  .container {
+    margin: 1rem auto;
+  }
+
+  .card-body {
+    padding: 0.5rem;
+  }
+
+  .mat-cell {
+    padding: 0.5rem;
+  }
+
+  .saldo-valor {
+    font-size: 1.5rem;
+  }
+} 

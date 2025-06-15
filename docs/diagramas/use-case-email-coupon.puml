@@ -1,0 +1,35 @@
+@startuml Use Case - Email Coupon System
+
+skinparam usecaseStyle uml2
+skinparam backgroundColor white
+skinparam handwritten false
+
+actor "Administrador" as admin
+actor "Professor" as teacher
+actor "Aluno" as student
+
+rectangle "Sistema de Envio de Cupons por Email" {
+    usecase "Gerenciar Cupons" as UC1
+    usecase "Enviar Cupons para Professores" as UC2
+    usecase "Enviar Cupons para Alunos" as UC3
+    usecase "Visualizar Histórico de Envios" as UC4
+    usecase "Receber Cupom por Email" as UC5
+    usecase "Validar Cupom" as UC6
+}
+
+admin --> UC1
+admin --> UC2
+admin --> UC3
+admin --> UC4
+
+teacher --> UC5
+teacher --> UC6
+
+student --> UC5
+student --> UC6
+
+UC1 ..> UC2 : <<include>>
+UC1 ..> UC3 : <<include>>
+UC1 ..> UC4 : <<include>>
+
+@enduml 
