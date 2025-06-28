@@ -49,6 +49,7 @@ public class TransacaoService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Transacao> obterHistoricoTransacoes(String idUsuario) {
         List<Transacao> transacoesEnviadas = transacaoRepository.findByIdRemetenteOrderByDataHoraDesc(idUsuario);
         List<Transacao> transacoesRecebidas = transacaoRepository.findByIdDestinatarioOrderByDataHoraDesc(idUsuario);
@@ -60,17 +61,9 @@ public class TransacaoService {
         return transacoesEnviadas;
     }
 
+    @Transactional(readOnly = true)
     public BigDecimal obterSaldo(String idUsuario) {
-        List<Transacao> transacoes = obterHistoricoTransacoes(idUsuario);
-        return transacoes.stream()
-                .map(t -> {
-                    if (t.getIdRemetente().equals(idUsuario)) {
-                        return t.getValor().negate();
-                    } else {
-                        return t.getValor();
-                    }
-                })
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return transacaoRepository.calculateBalanceByUserId(idUsuario);
     }
 
     private void enviarNotificacaoTransacao(Transacao transacao) {
