@@ -2,7 +2,7 @@ package com.lab.transaction_service.service;
 
 import com.lab.transaction_service.model.Transacao;
 import com.lab.transaction_service.model.TipoTransacao;
-import com.lab.transaction_service.model.MensagemNotificacaoTransacao;
+import com.lab.transaction_service.model.TransactionNotificationMessage;
 import com.lab.transaction_service.repository.TransacaoRepository;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,11 +75,11 @@ public class TransacaoService {
 
     private void enviarNotificacaoTransacao(Transacao transacao) {
         // Criar mensagem de notificação
-        MensagemNotificacaoTransacao mensagem = new MensagemNotificacaoTransacao();
-        mensagem.setIdUsuario(transacao.getIdDestinatario());
-        mensagem.setValor(transacao.getValor());
-        mensagem.setDescricao(transacao.getDescricao());
-        mensagem.setTipoTransacao(transacao.getTipo().name());
+        TransactionNotificationMessage mensagem = new TransactionNotificationMessage();
+        mensagem.setUserId(transacao.getIdDestinatario());
+        mensagem.setAmount(transacao.getValor());
+        mensagem.setDescription(transacao.getDescricao());
+        mensagem.setTransactionType(transacao.getTipo().name());
 
         // Enviar para o serviço de notificação
         rabbitTemplate.convertAndSend(exchangeTransacao, routingKeyNotificacao, mensagem);
