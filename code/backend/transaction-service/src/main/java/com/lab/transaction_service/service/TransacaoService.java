@@ -30,23 +30,23 @@ public class TransacaoService {
     }
 
     @Transactional
-    public Transacao enviarMoedas(String idRemetente, String idDestinatario, BigDecimal valor, String descricao) {
-        // Validação do saldo do remetente (normalmente envolveria chamada a outro serviço)
-        // Por enquanto, assumimos que a verificação é feita pelo chamador
-
+    public Transacao sendCoins(String senderId, String recipientId, BigDecimal amount, String description) {
+        validateTransactionAmount(amount);
         Transacao transacao = new Transacao();
-        transacao.setIdRemetente(idRemetente);
-        transacao.setIdDestinatario(idDestinatario);
-        transacao.setValor(valor);
-        transacao.setDescricao(descricao);
+        transacao.setIdRemetente(senderId);
+        transacao.setIdDestinatario(recipientId);
+        transacao.setValor(amount);
+        transacao.setDescricao(description);
         transacao.setTipo(TipoTransacao.PROFESSOR_PARA_ALUNO);
-
         Transacao transacaoSalva = transacaoRepository.save(transacao);
-
-        // Enviar notificação
         enviarNotificacaoTransacao(transacaoSalva);
-
         return transacaoSalva;
+    }
+
+    private void validateTransactionAmount(BigDecimal amount) {
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Invalid amount");
+        }
     }
 
     public List<Transacao> obterHistoricoTransacoes(String idUsuario) {
