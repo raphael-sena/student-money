@@ -1,6 +1,6 @@
 package com.lab.transaction_service.controller;
 
-import com.lab.transaction_service.dto.EnvioMoedasDTO;
+import com.lab.transaction_service.dto.SendCoinsDTO;
 import com.lab.transaction_service.dto.TransacaoDTO;
 import com.lab.transaction_service.mapper.TransacaoMapper;
 import com.lab.transaction_service.model.Transacao;
@@ -17,28 +17,28 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/transacoes")
 public class TransacaoController {
 
-    private final TransacaoService servicoTransacao;
+    private final TransacaoService transactionService;
     private final TransacaoMapper transacaoMapper;
 
-    public TransacaoController(TransacaoService servicoTransacao, TransacaoMapper transacaoMapper) {
-        this.servicoTransacao = servicoTransacao;
+    public TransacaoController(TransacaoService transactionService, TransacaoMapper transacaoMapper) {
+        this.transactionService = transactionService;
         this.transacaoMapper = transacaoMapper;
     }
 
-    @PostMapping("/enviar")
-    public ResponseEntity<TransacaoDTO> enviarMoedas(@Valid @RequestBody EnvioMoedasDTO envioMoedasDTO) {
-        Transacao transacao = servicoTransacao.enviarMoedas(
-            envioMoedasDTO.getIdRemetente(),
-            envioMoedasDTO.getIdDestinatario(),
-            envioMoedasDTO.getValor(),
-            envioMoedasDTO.getDescricao()
+    @PostMapping("/send")
+    public ResponseEntity<TransacaoDTO> sendCoins(@Valid @RequestBody SendCoinsDTO sendCoinsDTO) {
+        Transacao transacao = transactionService.sendCoins(
+            sendCoinsDTO.getSenderId(),
+            sendCoinsDTO.getRecipientId(),
+            sendCoinsDTO.getAmount(),
+            sendCoinsDTO.getDescription()
         );
         return ResponseEntity.ok(transacaoMapper.paraDTO(transacao));
     }
 
     @GetMapping("/historico/{idUsuario}")
     public ResponseEntity<List<TransacaoDTO>> obterHistoricoTransacoes(@PathVariable String idUsuario) {
-        List<Transacao> historico = servicoTransacao.obterHistoricoTransacoes(idUsuario);
+        List<Transacao> historico = transactionService.obterHistoricoTransacoes(idUsuario);
         List<TransacaoDTO> historicoDTO = historico.stream()
             .map(transacaoMapper::paraDTO)
             .collect(Collectors.toList());
@@ -47,7 +47,7 @@ public class TransacaoController {
 
     @GetMapping("/saldo/{idUsuario}")
     public ResponseEntity<BigDecimal> obterSaldo(@PathVariable String idUsuario) {
-        BigDecimal saldo = servicoTransacao.obterSaldo(idUsuario);
+        BigDecimal saldo = transactionService.obterSaldo(idUsuario);
         return ResponseEntity.ok(saldo);
     }
 } 
